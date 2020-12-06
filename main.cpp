@@ -8,11 +8,10 @@ int wait2sec(int a)
     return a;
 }
 
-
 int main()
 {
-    std::function<void()> func = std::bind(wait2sec,3);
-    auto ret = BenchMarker::Benchmark<int>(func);
-    std::cout << ret << std::endl;
+    std::function<void()> func = [] { return wait2sec(3); };
+    auto ret = BenchMarker::Benchmark<std::chrono::nanoseconds>(func);
+    std::cout << ret.count() << std::endl;
     return 0;
 }
