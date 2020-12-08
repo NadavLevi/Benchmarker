@@ -15,13 +15,13 @@ struct is_duration<std::chrono::duration<Rep, Period>> : std::true_type { };
 
 class BenchMarker {
 public:
-    template<typename Duration>
-    static Duration Benchmark(const std::function<void()>& func)
+    template<typename Duration, typename ReturnType, typename... Args>
+    static Duration Benchmark(const std::function<ReturnType(Args...)>& func, Args... args)
     {
         // Compile-time sanity check
         static_assert(is_duration<Duration>::value, "Duration typename must be a std::chrono::duration");
         auto start = std::chrono::high_resolution_clock::now();
-        func();
+        func(args...);
         auto end = std::chrono::high_resolution_clock::now();
         return std::chrono::duration_cast<Duration>(end - start);
     }
